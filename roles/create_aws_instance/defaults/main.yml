@@ -1,0 +1,8 @@
+---
+region: "us-east-1"  # Replace with your desired region
+instance_type: "t2.medium"  # Replace with your desired instance type
+ami_id: "ami-053b0d53c279acc90"  # Replace with the AMI ID of the desired image
+key_name: "ubuntu_key"  # Replace with the name of your existing EC2 key pair
+ssh_public_key: "{{ lookup('file', '~/.ssh/id_rsa.pub')}} "
+vpc_id: "vpc-003943bfbe38c7574"
+state: "present"

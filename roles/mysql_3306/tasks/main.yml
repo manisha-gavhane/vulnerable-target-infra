@@ -1,0 +1,13 @@
+- name: pull mysql docker image
+  community.docker.docker_image:
+    name: mysql/mysql-server
+    source: pull
+
+- name: ensure a container is running
+  community.docker.docker_container:
+    name: mysql-server
+    state: started
+    image: "mysql/mysql-server"
+    pull: true
+    ports:
+      - "3306:3306"

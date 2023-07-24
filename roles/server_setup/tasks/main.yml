@@ -1,0 +1,50 @@
+---
+- name: Update all packages to their latest version
+  ansible.builtin.apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+
+- name: Install a list of packages
+  ansible.builtin.apt:
+    pkg:
+    - ca-certificates
+    - curl
+    - gnupg
+    - python3-pip
+    state: latest
+
+- name: Add Docker GPG apt Key
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker Repository
+  ansible.builtin.apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu jammy stable
+    state: present
+
+- name: Update apt and install docker-ce
+  ansible.builtin.apt:
+    pkg:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    - docker-buildx-plugin
+    - docker-compose-plugin
+    state: latest
+    update_cache: true
+
+- name: Make sure a service unit is running
+  ansible.builtin.systemd:
+    state: started
+    name: docker
+    enabled: true
+
+- name: Install docker python package
+  ansible.builtin.pip:
+    name: docker
+
+- name: Install firewall python package
+  ansible.builtin.pip:
+    name: firewall

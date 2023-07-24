@@ -1,0 +1,14 @@
+---
+- name: pull FTP docker image
+  community.docker.docker_image:
+    name: delfer/alpine-ftp-server
+    source: pull
+
+- name: ensure FTP-server container is running
+  community.docker.docker_container:
+    name: FTP-server
+    state: started
+    image: "delfer/alpine-ftp-server"
+    pull: true
+    ports:
+      - "21:21"

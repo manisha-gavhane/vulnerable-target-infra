@@ -1,0 +1,13 @@
+- name: pull nginx docker image
+  community.docker.docker_image:
+    name: nginx
+    source: pull
+
+- name: ensure a container is running
+  community.docker.docker_container:
+    name: nginx-server
+    state: started
+    image: "nginx"
+    pull: true
+    ports:
+      - "443:80"

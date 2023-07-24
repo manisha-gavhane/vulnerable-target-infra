@@ -1,0 +1,38 @@
+---
+- name: create key pair using provided key_material
+      amazon.aws.ec2_key:
+        region: "{{ region }}"
+        name: "{{ key_name }}"
+        key_material: "{{ ssh_public_key }}"
+        state: "{{ state }}"
+
+- name: Create security group which opens all ports
+  amazon.aws.ec2_security_group:
+    name: test-sg-fortirecon
+    description: sg with rule descriptions
+    vpc_id: "{{ vpc_id }}"
+    region: us-east-1
+    rules:
+      - proto: tcp
+        ports: 
+        - 22
+        cidr_ip: 0.0.0.0/0
+        rule_desc: allow all
+    state: "{{ state }}"
+
+- name: start an instance with a public IP address
+  amazon.aws.ec2_instance:
+    name: "open-port-targets"
+    region: "{{ region }}"
+    key_name: "{{ key_name }}"
+    instance_type: "{{ instance_type }}" 
+    security_group: test-sg-fortirecon
+    network:
+      assign_public_ip: true
+    image_id: "{{ ami_id }}"
+    state: "{{ state }}"
+  register: ec2_instance
+
+- name: Print instance details
+  debug:
+    var: ec2_instance.instances

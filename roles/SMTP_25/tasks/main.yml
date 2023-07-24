@@ -1,0 +1,14 @@
+---
+- name: pull SMTP docker image
+  community.docker.docker_image:
+    name: bytemark/smtp
+    source: pull
+
+- name: ensure SMTP container is running
+  community.docker.docker_container:
+    name: SMTP-server
+    state: started
+    image: "bytemark/smtp"
+    pull: true
+    ports:
+      - "25:25"
