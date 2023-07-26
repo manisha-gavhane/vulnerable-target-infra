@@ -5,17 +5,22 @@
   roles:
     - create_aws_instance
 
-- hosts: server
+- hosts: server1
   become: true
   remote_user: ubuntu
   roles:
     - server_setup
     - mysql_3306
-    # - nginx_80
-    # - nginx_443
-    # - FPT_21
-    # - SMTP_25
-    # - tomcat
-  tasks:
-    - debug:
-        var: hostvars['localhost']['ec2_instance']
+    - nginx_80
+    - tomcat
+
+- hosts: server2
+  become: true
+  remote_user: ubuntu
+  roles:
+    - server_setup
+    - nginx_443
+    - FPT_21
+    - SMTP_25
+    - apache2.4.50
+    - phpmyadmin

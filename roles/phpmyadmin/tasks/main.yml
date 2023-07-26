@@ -1,0 +1,13 @@
+- name: pull phpmyadmin docker image
+  community.docker.docker_image:
+    name: phpmyadmin
+    tag: 5.0.4
+    source: pull
+
+- name: ensure a container is running
+  community.docker.docker_container:
+    name: mysql-server
+    state: started
+    image: "phpmyadmin:5.0.4"
+    ports:
+      - "8080:80"

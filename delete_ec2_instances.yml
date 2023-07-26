@@ -19,13 +19,14 @@
         key_material: "{{ ssh_public_key }}"
         state: "{{ state }}"
 
-    - name: Delete an instance with a public IP address
+    - name: Delete instances
       amazon.aws.ec2_instance:
         name: "open-port-targets"
         region: "{{ region }}"
         key_name: "{{ key_name }}"
         instance_type: "{{ instance_type }}" 
         security_group: test-sg-fortirecon
+        count: 2
         network:
           assign_public_ip: true
         image_id: "{{ ami_id }}"

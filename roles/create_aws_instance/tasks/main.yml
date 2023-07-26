@@ -16,6 +16,12 @@
       - proto: tcp
         ports: 
         - 22
+        - 3306
+        - 21
+        - 25
+        - 80
+        - 443
+        - 8080
         cidr_ip: 0.0.0.0/0
         rule_desc: allow all
     state: "{{ state }}"
@@ -50,6 +56,7 @@
     key_name: "{{ key_name }}"
     instance_type: "{{ instance_type }}" 
     security_group: test-sg-fortirecon
+    count: 2
     network:
       assign_public_ip: true
     image_id: "{{ ami_id }}"
@@ -57,9 +64,17 @@
   register: ec2_instance
 
 - name: Wait for the instances to boot by checking the ssh port
-  wait_for: host={{ec2_instance.instances[0].public_ip_address}} port=22 timeout=320 state=started
+  wait_for: host={{ec2_instance.instances[0].public_ip_address}} port=22 delay=30 timeout=320 state=started
+
+- name: Wait for the instances to boot by checking the ssh port
+  wait_for: host={{ec2_instance.instances[1].public_ip_address}} port=22 delay=30 timeout=320 state=started
 
 - name: Add a host local to your machines
   ansible.builtin.add_host:
-    groups: server
+    groups: server1
     name: "{{ec2_instance.instances[0].public_ip_address}}"
+
+- name: Add a host local to your machines
+  ansible.builtin.add_host:
+    groups: server2
+    name: "{{ec2_instance.instances[1].public_ip_address}}"
