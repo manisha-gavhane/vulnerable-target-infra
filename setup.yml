@@ -1,18 +1,21 @@
 ---
-# - name: Create EC2 Instance
-#   hosts: localhost
-#   gather_facts: no
-#   roles:
-#     - create_aws_instance
+- name: Create EC2 Instance
+  hosts: localhost
+  gather_facts: no
+  roles:
+    - create_aws_instance
 
-- hosts: servers
+- hosts: server
   become: true
   remote_user: ubuntu
   roles:
     - server_setup
-    # - mysql_3306
+    - mysql_3306
     # - nginx_80
     # - nginx_443
     # - FPT_21
     # - SMTP_25
-    - tomcat
+    # - tomcat
+  tasks:
+    - debug:
+        var: hostvars['localhost']['ec2_instance']

@@ -12,3 +12,16 @@
     pull: true
     ports:
       - "21:21"
+
+- name: add port to security group
+  amazon.aws.ec2_security_group:
+    name: hostvars['localhost']['ec2_instance'][instances][0].security_groups[0].group_name
+    region: us-east-1
+    description: adding port 21 to the created security port
+    rules:
+      - proto: tcp
+        ports: 
+        - 21
+        cidr_ip: 0.0.0.0/0
+        rule_desc: enable port 21
+    state: "present"

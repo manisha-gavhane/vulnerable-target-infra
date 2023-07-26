@@ -32,6 +32,7 @@
     - containerd.io
     - docker-buildx-plugin
     - docker-compose-plugin
+    - ansible
     state: latest
     update_cache: true
 
@@ -45,6 +46,22 @@
   ansible.builtin.pip:
     name: docker
 
+- name: Install boto3 python package
+  ansible.builtin.pip:
+    name: boto3
+
 - name: Install firewall python package
   ansible.builtin.pip:
     name: firewall
+
+# - name: This command will add access key to the remote server
+#   ansible.builtin.shell:
+#     cmd: AWS_ACCESS_KEY=""
+
+# - name: This command will add secret key to the remote server
+#   ansible.builtin.shell:
+#     cmd: AWS_SECRET_KEY=""
+
+- name: This command will install ansible-galaxy collection
+  ansible.builtin.shell:
+    cmd: ansible-galaxy collection install amazon.aws
