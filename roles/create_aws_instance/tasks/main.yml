@@ -51,30 +51,40 @@
 
 - name: start an instance with a public IP address
   amazon.aws.ec2_instance:
-    name: "open-port-targets"
+    # name: "open-port-targets"
+    name: "Target {{ item }}"
     region: "{{ region }}"
     key_name: "{{ key_name }}"
     instance_type: "{{ instance_type }}" 
     security_group: test-sg-fortirecon
-    count: 2
+    # count: 2
     network:
       assign_public_ip: true
     image_id: "{{ ami_id }}"
     state: "{{ state }}"
   register: ec2_instance
+  loop: 
+    - 1
+    - 2
 
-- name: Wait for the instances to boot by checking the ssh port
-  wait_for: host={{ec2_instance.instances[0].public_ip_address}} port=22 delay=30 timeout=320 state=started
+- debug:
+    var: "{{ ec2_instance }}"
 
-- name: Wait for the instances to boot by checking the ssh port
-  wait_for: host={{ec2_instance.instances[1].public_ip_address}} port=22 delay=30 timeout=320 state=started
+# - name: Wait for the instances to boot by checking the ssh port
+#   wait_for: host={{ec2_instance.results[ {{ item }}].instances[0].public_ip_address}} port=22 delay=30 timeout=320 state=started
+#   loop:
+#     - 0
+#     - 1
 
-- name: Add a host local to your machines
-  ansible.builtin.add_host:
-    groups: server1
-    name: "{{ec2_instance.instances[0].public_ip_address}}"
+# # - name: Wait for the instances to boot by checking the ssh port
+# #   wait_for: host={{ec2_instance.results[1].instances[0].public_ip_address}} port=22 delay=30 timeout=320 state=started
 
-- name: Add a host local to your machines
-  ansible.builtin.add_host:
-    groups: server2
-    name: "{{ec2_instance.instances[1].public_ip_address}}"
+# - name: Add a host local to your machines
+#   ansible.builtin.add_host:
+#     groups: server1
+#     name: "{{ec2_instance.results[0].instances[0].public_ip_address}}"
+
+# - name: Add a host local to your machines
+#   ansible.builtin.add_host:
+#     groups: server2
+#     name: "{{ec2_instance.results[1].instances[0].public_ip_address}}"
